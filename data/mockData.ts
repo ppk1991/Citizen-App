@@ -1,4 +1,3 @@
-
 // FIX: Import UserData from the centralized types file.
 import type { User, Project, Transport, Tax, Utility, Benefit, UserData } from '../types';
 
@@ -25,6 +24,7 @@ export const initialUserData: UserData = {
                 { name: 'Completion', date: '2025-12-31', status: 'Upcoming' },
             ],
             imageUrl: 'https://storage.googleapis.com/aai-web-samples/metro-construction.jpeg',
+            mapImageUrl: 'https://storage.googleapis.com/aai-web-samples/metro-map.jpeg',
             coordinates: { x: 50, y: 55 }
         },
         { 

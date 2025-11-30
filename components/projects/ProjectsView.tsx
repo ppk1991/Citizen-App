@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import type { Project } from '../../types';
 import Icon from '../shared/Icon';
@@ -67,13 +66,15 @@ const MilestoneTimeline: React.FC<{ milestones: Project['milestones'] }> = ({ mi
 
 const ProjectCard: React.FC<{ project: Project; onSelect: (project: Project) => void; allProjects: Project[] }> = ({ project, onSelect, allProjects }) => {
     const [animatedProgress, setAnimatedProgress] = useState(0);
+    const [imageView, setImageView] = useState<'construction' | 'map'>('construction');
 
     useEffect(() => {
+        setImageView('construction');
         const animationFrameId = requestAnimationFrame(() => {
             setAnimatedProgress(project.progress);
         });
         return () => cancelAnimationFrame(animationFrameId);
-    }, [project.progress]);
+    }, [project.id, project.progress]);
     
     const relatedProjects = useMemo(() => {
         if (!allProjects) return [];
@@ -86,8 +87,26 @@ const ProjectCard: React.FC<{ project: Project; onSelect: (project: Project) => 
 
     return (
         <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-xl hover:border-brand-primary hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden">
-            <div className="w-full h-48">
-                <img src={project.imageUrl} alt={project.name} className="w-full h-full object-cover" />
+            <div className="relative w-full h-48">
+                <img src={imageView === 'map' && project.mapImageUrl ? project.mapImageUrl : project.imageUrl} alt={project.name} className="w-full h-full object-cover" />
+                {project.mapImageUrl && (
+                    <div className="absolute top-2 right-2 flex space-x-1 bg-black/20 backdrop-blur-sm p-1 rounded-full">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setImageView('construction'); }}
+                            className={`p-1.5 rounded-full transition-colors ${imageView === 'construction' ? 'bg-brand-primary text-white' : 'bg-white/70 text-gray-800 hover:bg-white'}`}
+                            title="Construction View"
+                        >
+                            <Icon name="projects" className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setImageView('map'); }}
+                            className={`p-1.5 rounded-full transition-colors ${imageView === 'map' ? 'bg-brand-primary text-white' : 'bg-white/70 text-gray-800 hover:bg-white'}`}
+                            title="Map View"
+                        >
+                            <Icon name="map" className="w-5 h-5" />
+                        </button>
+                    </div>
+                )}
             </div>
             <div className="p-5 flex flex-col flex-grow">
                 <div className="flex-grow">
@@ -233,11 +252,20 @@ const ProjectsView: React.FC<ProjectsViewProps> = ({ projects }) => {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [statusFilter, setStatusFilter] = useState<Project['status'] | 'All'>('All');
     const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+    const [modalImageView, setModalImageView] = useState<'construction' | 'map'>('construction');
 
     const filteredProjects = projects.filter(project => {
         if (statusFilter === 'All') return true;
         return project.status === statusFilter;
     });
+
+    useEffect(() => {
+        // Reset image view when modal opens or changes
+        if (selectedProject) {
+            setModalImageView('construction');
+        }
+    }, [selectedProject]);
+
 
     return (
         <div>
@@ -304,7 +332,29 @@ const ProjectsView: React.FC<ProjectsViewProps> = ({ projects }) => {
 
             {selectedProject && (
                 <Modal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} title={selectedProject.name}>
-                    <img src={selectedProject.imageUrl} alt={selectedProject.name} className="w-full h-64 object-cover rounded-lg mb-4" />
+                    <div className="relative mb-4">
+                        <img src={modalImageView === 'map' && selectedProject.mapImageUrl ? selectedProject.mapImageUrl : selectedProject.imageUrl} alt={selectedProject.name} className="w-full h-64 object-cover rounded-lg" />
+                        {selectedProject.mapImageUrl && (
+                             <div className="absolute top-3 right-3 flex space-x-2">
+                                <button
+                                    onClick={() => setModalImageView('construction')}
+                                    className={`p-2 rounded-full shadow-md transition-colors ${modalImageView === 'construction' ? 'bg-brand-primary text-white' : 'bg-white/80 text-gray-800 hover:bg-white'}`}
+                                    aria-label="Show construction photo"
+                                    title="Construction View"
+                                >
+                                    <Icon name="projects" className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={() => setModalImageView('map')}
+                                    className={`p-2 rounded-full shadow-md transition-colors ${modalImageView === 'map' ? 'bg-brand-primary text-white' : 'bg-white/80 text-gray-800 hover:bg-white'}`}
+                                    aria-label="Show map"
+                                    title="Map View"
+                                >
+                                    <Icon name="map" className="w-5 h-5" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="space-y-4 text-gray-700">
                         <div>
                             <p className="font-semibold">Status</p>

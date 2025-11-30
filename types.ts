@@ -1,4 +1,3 @@
-
 export type View = 'DASHBOARD' | 'PROJECTS' | 'TRANSPORT' | 'TAXES' | 'UTILITIES' | 'BENEFITS';
 
 export interface User {
@@ -24,6 +23,7 @@ export interface Project {
     stakeholders: string[];
     milestones: Milestone[];
     imageUrl: string;
+    mapImageUrl?: string;
     coordinates?: { x: number; y: number; };
 }
 

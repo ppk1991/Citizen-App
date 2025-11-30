@@ -1,7 +1,6 @@
-
 import React from 'react';
 
-type IconName = 'dashboard' | 'projects' | 'transport' | 'taxes' | 'utilities' | 'benefits' | 'logout' | 'user' | 'close' | 'chevron-down' | 'chevron-right' | 'check' | 'share' | 'receipt' | 'arrow-up' | 'arrow-down' | 'info' | 'calendar' | 'autoplay';
+type IconName = 'dashboard' | 'projects' | 'transport' | 'taxes' | 'utilities' | 'benefits' | 'logout' | 'user' | 'close' | 'chevron-down' | 'chevron-right' | 'check' | 'share' | 'receipt' | 'arrow-up' | 'arrow-down' | 'info' | 'calendar' | 'autoplay' | 'map';
 
 interface IconProps {
     name: IconName;
@@ -29,6 +28,7 @@ const ICONS: Record<IconName, React.ReactNode> = {
     info: <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />,
     calendar: <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18" />,
     autoplay: <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.664 0l3.181-3.183m-4.991-2.695v4.992m0 0h-4.992m4.992 0l-3.181-3.183a8.25 8.25 0 00-11.664 0l-3.181 3.183" />,
+    map: <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13v-6m0-7v6m0-6l5.447-2.724A1 1 0 0115 5.618v10.764a1 1 0 01-1.447.894L9 14m-3-7l6-3m-6 3l6 3m-6 3l6-3m6 3l6 3m-6-3l6-3m-6-3l6-3" />,
 };
 
 const Icon: React.FC<IconProps> = ({ name, className = 'h-6 w-6' }) => {
